@@ -1,0 +1,42 @@
+{
+    "tables": {
+        "games": {
+            "where": [
+                "name",
+                "follows"
+            ],
+            "operators": [
+                "like",
+                ">"
+            ],
+            "values": [
+                "call of duty",
+                "1000"
+            ]
+        },
+        "companies": {
+            "where": [
+                "country"
+            ],
+            "operators": [
+                "like"
+            ],
+            "values": [
+                "EUA"
+            ]
+        }
+    }
+}
+
+{
+    "select": {
+        "games": [
+            "name",
+            "summary"
+        ],
+        "companies": [
+            "name",
+            "country"
+        ]
+    }
+}
