@@ -1,3 +1,4 @@
+//Exemplo de payload de entrada
 {
     "select": {
         "games": [
@@ -39,5 +40,40 @@
         "companies": [
             "United States of America"
         ]
-    }
+    },
+    "condition": "and"
+}
+
+//Usado para passar no teste de consulta com where
+{
+    "select": {
+        "games": [
+            "name",
+            "summary"
+        ],
+        "companies": [
+            "name",
+            "country"
+        ]
+    },
+    "join": [
+        "games",
+        "companies"
+    ],
+    "where": {
+        "games": [
+            "name"
+        ]
+    },
+    "operators": {
+        "games": [
+            "alike"
+        ]
+    },
+    "values": {
+        "games": [
+            "Call of Duty%"
+        ]
+    },
+    "condition": "and"
 }

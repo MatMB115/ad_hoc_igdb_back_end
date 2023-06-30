@@ -51,6 +51,8 @@ class API:
 
         query += self.join_parse(body)
 
+        query += self.where_parse(body)
+
         query += " limit 5"
 
         return query
@@ -139,4 +141,45 @@ class API:
             raise ValueError("Tabelas não podem dar join")
 
     def where_parse(self, body):
-        pass
+        wheres = body['where']
+        operators = body['operators']
+        values = body['values']
+        condition = body['condition']
+        where_fields = []
+        where_query = " WHERE "
+
+        if 'games' in wheres:
+            for where, operator, value in zip(wheres['games'], operators['games'], values['games']):
+                where_fields.append("g." + where + " " + operator + " '" + value + "'")
+
+        if 'companies' in wheres:
+            for where, operator, value in zip(wheres['companies'], operators['companies'], values['companies']):
+                where_fields.append("cp." + where + " " + operator + " '" + value + "'")
+
+        if 'character' in wheres:
+            for where, operator, value in zip(wheres['character'], operators['character'], values['character']):
+                where_fields.append("ch." + where + " " + operator + " '" + value + "'")
+
+        if 'plataform' in wheres:
+            for where, operator, value in zip(wheres['plataform'], operators['plataform'], values['plataform']):
+                where_fields.append("p." + where + " " + operator + " '" + value + "'")
+
+        if 'genres' in wheres:
+            for where, operator, value in zip(wheres['genres'], operators, values):
+                where_fields.append("gr." + where + " " + operator + " '" + value + "'")
+
+        if 'games_modes' in wheres:
+            for where, operator, value in zip(wheres['games_modes'], operators, values):
+                where_fields.append("gmd." + where + " " + operator + " '" + value + "'")
+
+        if not where_fields:
+            return ''
+
+        for field in where_fields[:-1]:
+            where_query += field + condition
+
+        where_query += where_fields[-1]
+
+        print(where_query)
+
+        return where_query
