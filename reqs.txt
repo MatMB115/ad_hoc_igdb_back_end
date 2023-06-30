@@ -13,3 +13,16 @@ sqlacodegen==3.0.0rc2
 SQLAlchemy==1.4.48
 typing_extensions==4.6.3
 urllib3==2.0.2
+Flask==2.2.5
+flask-babel==3.1.0
+Flask-Compress==1.13
+Flask-Gravatar==0.5.0
+Flask-Login==0.6.2
+Flask-Mail==0.9.1
+Flask-Migrate==4.0.4
+Flask-Paranoid==0.3.0
+Flask-Principal==0.4.0
+Flask-Security-Too==5.1.2
+Flask-SocketIO==5.3.4
+Flask-SQLAlchemy==3.0.3
+Flask-WTF==1.1.1

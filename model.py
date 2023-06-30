@@ -31,6 +31,7 @@ class API:
         self.app = Flask(__name__)
         self.app.route('/query', methods=['POST'])(self.get_consulta)
         self.app.run(debug=True)
+        
 
     def run(self):
         self.app.run(debug=True)
@@ -53,13 +54,14 @@ class API:
 
         query += self.where_parse(body)
 
-        query += " limit 5"
+        query += " limit 100"
 
         return query
 
     def select_parse(self, body):
         select = body['select']
         select_fields = []
+        
         select_query = "SELECT "
 
         if 'games' in select:
@@ -150,11 +152,11 @@ class API:
 
         if 'games' in wheres:
             for where, operator, value in zip(wheres['games'], operators['games'], values['games']):
-                where_fields.append("g." + where + " " + operator + " '" + value + "'")
+                where_fields.append(self.where_field_parse("g.", where, operator, value))
 
         if 'companies' in wheres:
             for where, operator, value in zip(wheres['companies'], operators['companies'], values['companies']):
-                where_fields.append("cp." + where + " " + operator + " '" + value + "'")
+                where_fields.append(self.where_field_parse("cp.", where, operator, value))
 
         if 'character' in wheres:
             for where, operator, value in zip(wheres['character'], operators['character'], values['character']):
@@ -162,16 +164,16 @@ class API:
 
         if 'plataform' in wheres:
             for where, operator, value in zip(wheres['plataform'], operators['plataform'], values['plataform']):
-                where_fields.append("p." + where + " " + operator + " '" + value + "'")
+                where_fields.append(self.where_field_parse("p.", where, operator, value))
 
         if 'genres' in wheres:
             for where, operator, value in zip(wheres['genres'], operators, values):
-                where_fields.append("gr." + where + " " + operator + " '" + value + "'")
+                where_fields.append(self.where_field_parse("gr.", where, operator, value))
 
         if 'games_modes' in wheres:
             for where, operator, value in zip(wheres['games_modes'], operators, values):
-                where_fields.append("gmd." + where + " " + operator + " '" + value + "'")
-
+                where_fields.append(self.where_field_parse("gmd.", where, operator, value))
+        
         if not where_fields:
             return ''
 
@@ -180,6 +182,25 @@ class API:
 
         where_query += where_fields[-1]
 
-        print(where_query)
-
         return where_query
+    
+    def where_field_parse(self, table , where, operator, value):
+        type_fields = {
+            'name': 'text',
+            'created_at': 'date',
+            'updated_at': 'date',
+            'url': 'text',
+            'summary': 'text',
+            'game_engines': 'text',
+            'follows': 'int',
+            'release_date': 'text',
+            'country': 'text',
+            'id': 'int', 
+            'abbreviation': 'text',
+            'alternative_name': 'text'
+            }
+        
+        if type_fields[where] == 'int' or type_fields[where] == 'date':
+            return table + where + " " + operator + " " + value
+        else:
+            return table + where + " " + operator + " '%" + value + "%'"

@@ -1,0 +1,14 @@
+{
+    "name": "text",
+    "created_at": "date",
+    "updated_at": "date",
+    "url": "text",
+    "summary": "text",
+    "game_engines": "text",
+    "follows": "int",
+    "release_date": "text",
+    "country": "text",
+    "id": "int", 
+    "abbreviation": "text",
+    "alternative_name": "text"
+}
