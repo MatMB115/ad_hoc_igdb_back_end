@@ -1,34 +1,4 @@
 {
-    "tables": {
-        "games": {
-            "where": [
-                "name",
-                "follows"
-            ],
-            "operators": [
-                "like",
-                ">"
-            ],
-            "values": [
-                "call of duty",
-                "1000"
-            ]
-        },
-        "companies": {
-            "where": [
-                "country"
-            ],
-            "operators": [
-                "like"
-            ],
-            "values": [
-                "EUA"
-            ]
-        }
-    }
-}
-
-{
     "select": {
         "games": [
             "name",
@@ -37,6 +7,37 @@
         "companies": [
             "name",
             "country"
+        ]
+    },
+    "join": [
+        "games",
+        "companies"
+    ],
+    "where": {
+        "games": [
+            "name",
+            "follows"
+        ],
+        "companies": [
+            "country"
+        ]
+    },
+    "operators": {
+        "games": [
+            "like",
+            ">"
+        ],
+        "companies": [
+            "like"
+        ]
+    },
+    "values": {
+        "games": [
+            "call of duty",
+            "1000"
+        ],
+        "companies": [
+            "United States of America"
         ]
     }
 }
