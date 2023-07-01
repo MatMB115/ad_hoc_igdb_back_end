@@ -54,8 +54,8 @@ class API:
 
         query += self.where_parse(body)
 
-        query += " limit 100"
-
+        query += " limit 10"
+        print(query)
         return query
 
     def select_parse(self, body):
@@ -84,8 +84,8 @@ class API:
             for fields in select['genres']:
                 select_fields.append("gr." + fields + " AS genres_" + fields)
 
-        if 'games_modes' in select:
-            for fields in select['games_modes']:
+        if 'gameModes' in select:
+            for fields in select['gameModes']:
                 select_fields.append("gmd." + fields + " AS games_modes_" + fields)
 
         if not select_fields:
@@ -118,7 +118,7 @@ class API:
             if 'genres' in join:
                 join_query += " JOIN game_genre gg ON gg.id_game = g.id JOIN genres gr ON gg.id_genre = gr.id"
 
-            if 'games_modes' in join:
+            if 'gameModes' in join:
                 join_query += " JOIN game_gamemode gms ON gms.id_game = g.id JOIN games_modes gmd ON gms.id_game_mode = gmd.id"
 
             return join_query
@@ -136,7 +136,7 @@ class API:
             if 'genres' in join:
                 return ' FROM genres gr'
 
-            if 'games_modes' in join:
+            if 'gameModes' in join:
                 return ' FROM games_modes gmd'
 
         else:
@@ -167,11 +167,11 @@ class API:
                 where_fields.append(self.where_field_parse("p.", where, operator, value))
 
         if 'genres' in wheres:
-            for where, operator, value in zip(wheres['genres'], operators, values):
+            for where, operator, value in zip(wheres['genres'], operators['genres'], values['genres']):
                 where_fields.append(self.where_field_parse("gr.", where, operator, value))
 
-        if 'games_modes' in wheres:
-            for where, operator, value in zip(wheres['games_modes'], operators, values):
+        if 'gameModes' in wheres:
+            for where, operator, value in zip(wheres['gameModes'], operators['gameModes'], values['gameModes']):
                 where_fields.append(self.where_field_parse("gmd.", where, operator, value))
         
         if not where_fields:
@@ -201,6 +201,6 @@ class API:
             }
         
         if type_fields[where] == 'int' or type_fields[where] == 'date':
-            return table + where + " " + operator + " " + value
+            return " " + table + where + " " + operator + " " + str(value) + " "
         else:
-            return table + where + " " + operator + " '%" + value + "%'"
+            return " " + table + where + " " + operator + " '%" + str(value) + "%'" + " "

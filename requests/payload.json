@@ -3,6 +3,37 @@
         "games": [
             "name",
             "summary"
+        ]
+    },
+    "join": [
+        "games"
+    ],
+    "where": {
+        "games": [
+            "name"
+        ]
+    },
+    "operators": {
+        "games": [
+            "ilike"
+        ]
+    },
+    "values": {
+        "games": [
+            "Call of Duty"
+        ]
+    },
+    "condition": "and",
+    "limit": 20,
+    "sort_by": "name"
+}
+
+
+{
+    "select": {
+        "games": [
+            "id",
+            "name"
         ],
         "companies": [
             "name",
@@ -15,20 +46,36 @@
     ],
     "where": {
         "games": [
+            "id",
             "name"
+        ],
+        "companies": [
+            "id"
         ]
     },
     "operators": {
         "games": [
-            "alike"
+            ">",
+            "ilike",
+            null
+        ],
+        "companies": [
+            ">",
+            null,
+            null
         ]
     },
     "values": {
         "games": [
-            "Call of Duty"
+            "1",
+            "Call of Duty",
+            null
+        ],
+        "companies": [
+            "1",
+            null,
+            null
         ]
     },
-    "condition": "and",
-    "limit": 20,
-    "sort_by": "name"
+    "condition": "OR"
 }
