@@ -54,7 +54,7 @@ class API:
 
         query += self.where_parse(body)
 
-        query += " limit 10"
+        query += " limit 100"
         print(query)
         return query
 
@@ -72,12 +72,12 @@ class API:
             for fields in select['companies']:
                 select_fields.append("cp." + fields + " AS companies_" + fields)
 
-        if 'character' in select:
-            for fields in select['character']:
+        if 'characters' in select:
+            for fields in select['characters']:
                 select_fields.append("ch." + fields + " AS character_" + fields)
 
-        if 'plataform' in select:
-            for fields in select['plataform']:
+        if 'plataforms' in select:
+            for fields in select['plataforms']:
                 select_fields.append("p." + fields + " AS plataform_" + fields)
 
         if 'genres' in select:
@@ -109,10 +109,10 @@ class API:
             if 'companies' in join:
                 join_query += " JOIN game_company gc ON g.id = gc.id_game JOIN companies cp ON gc.id_company = cp.id"
 
-            if 'character' in join:
+            if 'characters' in join:
                 join_query += " JOIN game_character gch ON gch.id_game = g.id JOIN character ch ON gch.id_character = ch.id"
 
-            if 'plataform' in join:
+            if 'plataforms' in join:
                 join_query += " JOIN game_plataform gp ON gp.id_game = g.id JOIN plataform p ON gp.id_plataform = p.id"
 
             if 'genres' in join:
@@ -127,10 +127,10 @@ class API:
             if 'companies' in join:
                 return ' FROM companies cp'
 
-            if 'character' in join:
+            if 'characters' in join:
                 return ' FROM character ch'
 
-            if 'plataform' in join:
+            if 'plataforms' in join:
                 return ' FROM plataform p'
 
             if 'genres' in join:
@@ -158,12 +158,12 @@ class API:
             for where, operator, value in zip(wheres['companies'], operators['companies'], values['companies']):
                 where_fields.append(self.where_field_parse("cp.", where, operator, value))
 
-        if 'character' in wheres:
-            for where, operator, value in zip(wheres['character'], operators['character'], values['character']):
+        if 'characters' in wheres:
+            for where, operator, value in zip(wheres['characters'], operators['characters'], values['characters']):
                 where_fields.append("ch." + where + " " + operator + " '" + value + "'")
 
-        if 'plataform' in wheres:
-            for where, operator, value in zip(wheres['plataform'], operators['plataform'], values['plataform']):
+        if 'plataforms' in wheres:
+            for where, operator, value in zip(wheres['plataforms'], operators['plataforms'], values['plataforms']):
                 where_fields.append(self.where_field_parse("p.", where, operator, value))
 
         if 'genres' in wheres:
@@ -200,7 +200,9 @@ class API:
             'alternative_name': 'text'
             }
         
-        if type_fields[where] == 'int' or type_fields[where] == 'date':
+        if type_fields[where] == 'int':
             return " " + table + where + " " + operator + " " + str(value) + " "
+        elif type_fields[where] == 'date':
+            return " " + table + where + " " + operator + " '" + str(value) + "' "
         else:
             return " " + table + where + " " + operator + " '%" + str(value) + "%'" + " "
