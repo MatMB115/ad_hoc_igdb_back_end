@@ -77,5 +77,19 @@
             null
         ]
     },
-    "condition": "OR"
+    "condition": "OR",
+    "limit": null,
+    "order_by": {
+        "games": [
+            "name",
+            "asc"
+        ]
+    },
+    "func_agregada": {
+        "games": [
+            "name",
+            "count",
+            "true"
+        ]
+    }
 }
