@@ -40,32 +40,36 @@ class API:
         body = request.get_json()
 
         consulta_dinamica = self.query_parse(body)
-
+        if 'error' in consulta_dinamica:
+            return consulta_dinamica, 400
+        
         resultados = self.db.consulta(consulta_dinamica)
         json = [dict(row) for row in resultados]
         return jsonify(json)
 
     def query_parse(self, body):
         query = ""
+        try:
+            select, group = self.select_parse(body)
 
-        select, group = self.select_parse(body)
+            query += select
 
-        query += select
+            query += self.join_parse(body)
 
-        query += self.join_parse(body)
+            query += self.where_parse(body)
 
-        query += self.where_parse(body)
+            query += group
 
-        query += group
+            query += self.order_parse(body)
 
-        query += self.order_parse(body)
+            if body['limit'] != None:
+                print(body['limit'])
+                query += f" limit {body['limit']}"
 
-        if body['limit'] != None:
-            print(body['limit'])
-            query += f" limit {body['limit']}"
-
-        print(query)
-        return query
+            print(query)
+            return query
+        except ValueError as e:
+            return ({'error': str(e)})
 
     def select_parse(self, body):
         select = body['select']
@@ -193,10 +197,14 @@ class API:
         wheres = body['where']
         operators = body['operators']
         values = body['values']
-        condition = body['condition']
+        if 'condition' in body:
+            condition = body['condition']
+        else:
+            condition = "AND"
+        
         where_fields = []
         where_query = " WHERE"
-
+        
         if 'games' in wheres:
             for where, operator, value in zip(wheres['games'], operators['games'], values['games']):
                 where_fields.append(self.where_field_parse("g.", where, operator, value))
@@ -207,7 +215,7 @@ class API:
 
         if 'characters' in wheres:
             for where, operator, value in zip(wheres['characters'], operators['characters'], values['characters']):
-                where_fields.append("ch." + where + " " + operator + " '" + value + "'")
+                where_fields.append(self.where_field_parse("ch.", where, operator, value))
 
         if 'plataforms' in wheres:
             for where, operator, value in zip(wheres['plataforms'], operators['plataforms'], values['plataforms']):
