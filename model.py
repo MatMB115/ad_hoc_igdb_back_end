@@ -25,12 +25,12 @@ class AcessDB:
             return []
 
 class API:
-    app = Flask(__name__)
     def __init__(self):
         self.db = AcessDB
         self.app = Flask(__name__)
+        CORS(self.app)
         self.app.route('/query', methods=['POST'])(self.get_consulta)
-        self.app.run(debug=True)
+        self.app.run(host='0.0.0.0')
         
 
     def run(self):
