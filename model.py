@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.exc import StaleDataError
+from flask_cors import CORS
 
 from DAO import *
 from mapeamento import *
@@ -30,8 +31,8 @@ class API:
         self.app = Flask(__name__)
         CORS(self.app)
         self.app.route('/query', methods=['POST'])(self.get_consulta)
-        self.app.run(host='0.0.0.0')
-        
+        self.app.run(host = '0.0.0.0')
+
 
     def run(self):
         self.app.run(debug=True)
@@ -42,7 +43,7 @@ class API:
         consulta_dinamica = self.query_parse(body)
         if 'error' in consulta_dinamica:
             return consulta_dinamica, 400
-        
+
         resultados = self.db.consulta(consulta_dinamica)
         json = [dict(row) for row in resultados]
         return jsonify(json)
@@ -63,7 +64,6 @@ class API:
             query += self.order_parse(body)
 
             if body['limit'] != None:
-                print(body['limit'])
                 query += f" limit {body['limit']}"
 
             print(query)
@@ -76,7 +76,7 @@ class API:
         select_fields = []
         agreggate_fields = body['func_agregada']
         group_field = []
-        
+
         select_query = "SELECT "
         group_query = " GROUP BY "
 
@@ -84,7 +84,7 @@ class API:
             for fields in select['games']:
                 if 'games' in agreggate_fields and agreggate_fields['games'][0] == fields:
                     select_fields.append(agreggate_fields['games'][1] + "(g." + fields + ")"+ " AS game_" + agreggate_fields['games'][1] + "_" +fields)
-                else: 
+                else:
                     select_fields.append("g." + fields + " AS game_" + fields)
                     group_field.append("g." + fields)
 
@@ -135,7 +135,7 @@ class API:
             select_query += field + ", "
 
         select_query += select_fields[-1]
-        
+
         if body['group_by'] and len(group_field) >= 1:
             for field in group_field[:-1]:
                 group_query += field + ", "
@@ -201,10 +201,10 @@ class API:
             condition = body['condition']
         else:
             condition = "AND"
-        
+
         where_fields = []
         where_query = " WHERE"
-        
+
         if 'games' in wheres:
             for where, operator, value in zip(wheres['games'], operators['games'], values['games']):
                 where_fields.append(self.where_field_parse("g.", where, operator, value))
@@ -228,7 +228,7 @@ class API:
         if 'gameModes' in wheres:
             for where, operator, value in zip(wheres['gameModes'], operators['gameModes'], values['gameModes']):
                 where_fields.append(self.where_field_parse("gmd.", where, operator, value))
-        
+
         if not where_fields:
             return ''
 
@@ -238,7 +238,7 @@ class API:
         where_query += where_fields[-1]
 
         return where_query
-    
+
     def where_field_parse(self, table , where, operator, value):
         type_fields = {
             'name': 'text',
@@ -248,25 +248,25 @@ class API:
             'summary': 'text',
             'game_engines': 'text',
             'follows': 'int',
-            'release_date': 'text',
+            'release_date': 'date',
             'country': 'text',
-            'id': 'int', 
+            'id': 'int',
             'abbreviation': 'text',
             'alternative_name': 'text'
             }
-        
+
         if type_fields[where] == 'int':
             return " " + table + where + " " + operator + " " + str(value) + " "
         elif type_fields[where] == 'date':
             return " " + table + where + " " + operator + " '" + str(value) + "' "
         else:
             return " " + table + where + " " + operator + " '%" + str(value) + "%'" + " "
-        
+
     def order_parse(self, body):
         order = body['order_by']
         if order == None:
             return ''
-        
+
         order_query = " ORDER BY "
         if 'games' in order:
             order_query += "g." + order['games'][0] + " " + order['games'][1]
