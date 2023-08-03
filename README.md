@@ -33,12 +33,16 @@
 
 # Back-end do relatório Ad-hoc
 
-Script em python formulado para realizar a carga no banco de dados relacional com PostgreSQL e utilizando ORM SQLAlchemy.
+API capaz de realizar consultas dinâmicas utilizando ORM SQLAlchemy.
 
 ---
 ## Sobre
 
 Conforme as orientações para realização da parte 2 do trabalho da disciplina de Banco de Dados II da Universidade Federal de Itajubá, a equipe desenvolveu uma API responsável por realizar as consultas nas tabelas do banco. O MER utilizado está presente na Figura abaixo e os payloads para requisições estão na pasta [requests](./requests/).
+
+Componentes do Projeto:
+- [Front-end](https://gitlab.com/alisonmaciel93/bd_trabalho_final)
+- [Script de Carga](https://github.com/MatMB115/script_carga_igdb)
 
 As orientações estão divididas nos seguintes tópicos:
 
